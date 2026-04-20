@@ -10,45 +10,43 @@
 
     <div class="w-screen h-screen flex flex-col md:flex-row overflow-hidden">
 
-        <!-- atas/kiri (mobil) -->
-        <div class="w-full md:w-1/2 h-1/2 md:h-full relative flex items-center justify-center">
+    <!-- mobil -->
+    <div class="w-full md:w-1/2 h-[45%] md:h-full relative flex items-center overflow-hidden">
 
-            <!-- shadow -->
-            <div class="absolute bottom-10 md:bottom-[120px] w-[300px] md:w-[700px] h-[200px] md:h-[400px] bg-gray-300 opacity-30 rounded-full blur-2xl"></div>
+        <!-- shadow -->
+        <div class="absolute bottom-6 md:bottom-[120px] w-[220px] md:w-[700px] h-[120px] md:h-[400px] bg-gray-300 opacity-30 rounded-full blur-2xl"></div>
 
-            <!-- mobil -->
-            <img 
-                src="{{ asset('car.png') }}" 
-                class="w-[250px] md:w-[650px] -rotate-90 md:absolute md:left-[-150px]">
+        <!-- mobil -->
+        <img 
+        src="{{ asset('car.png') }}" 
+        class="absolute left-[-40px] md:left-[-40px] w-[200px] md:w-[350px] rotate-90">
         </div>
 
-        <!-- bawah/kanan (content) -->
-        <div class="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-6 md:px-24">
+    <!-- content -->
+    <div class="w-full md:w-1/2 h-[55%] md:h-full flex flex-col justify-between md:justify-center px-5 md:px-24 pb-6 md:pb-0">
 
-            <!-- header -->
-            <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+        <!-- atas -->
+        <div>
+            <div class="flex items-center gap-2 text-xs md:text-sm text-gray-600 mb-2">
                 <img src="{{ asset('logo.png') }}" class="w-5 h-4 md:w-6 md:h-5">
                 <p>Car Parking</p>
             </div>
 
-            <!-- title -->
-            <h1 class="text-lg md:text-5xl font-bold text-gray-800 leading-snug mb-6 md:mb-10">
+            <h1 class="md:text-6xl text-4xl font-bold text-gray-800 leading-snug">
                 Cepat dan simple saat mengatur kendaraan Mu 💪
             </h1>
-
-            <!-- button -->
-            <div class="flex gap-3 w-full md:w-80">
-                <button class="flex-1 bg-gray-200 text-gray-700 py-2 md:py-3 rounded-lg">
-                    Skip
-                </button>
-
-                <button class="flex-1 bg-black text-white py-2 md:py-3 rounded-lg">
-                    Next
-                </button>
-            </div>
-
         </div>
-    </div>
 
-</body>
-</html>
+        <!-- tombol bawah -->
+        <div class="flex gap-3 mt-6 md:mt-10">
+            <button class="flex-1 bg-gray-200 text-gray-700 py-5 md:py-3 rounded-lg text-sm">
+                Skip
+            </button>
+
+            <button class="flex-1 bg-black text-white py-5 md:py-3 rounded-lg text-sm">
+                Next
+            </button>
+        </div>
+
+    </div>
+</div>
