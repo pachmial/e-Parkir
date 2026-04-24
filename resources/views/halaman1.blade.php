@@ -37,16 +37,15 @@
             </h1>
         </div>
 
-        <!-- tombol bawah -->
-        <div class="flex gap-3 mt-6 md:mt-10">
-            <button class="flex-1 bg-gray-200 text-gray-700 py-5 md:py-3 rounded-lg text-sm">
-                Skip
-            </button>
+       <div class="flex gap-3 mt-6 md:mt-10">
+    <a href="{{ url('/halaman3') }}" class="flex-1 bg-gray-200 text-gray-700 py-5 md:py-3 rounded-lg text-sm flex items-center justify-center">
+        Skip
+    </a>
 
-            <button class="flex-1 bg-black text-white py-5 md:py-3 rounded-lg text-sm">
-                Next
-            </button>
-        </div>
+    <a href="{{ url('/halaman2') }}" class="flex-1 bg-black text-white py-5 md:py-3 rounded-lg text-sm flex items-center justify-center">
+        Next
+    </a>
+</div>
 
     </div>
 </div>
