@@ -14,6 +14,8 @@ Route::get('/halaman1', function () {
 Route::get('/halaman2', function () {
     return view('halaman2');
 });
+Route::get('/map', fn() => view('maps'));
+
 Route::get('/halaman3', function () {
     return view('halaman3');
 });
@@ -25,4 +27,8 @@ Route::get('/halamanriwayat', function () {
 });
 Route::get('/pilihparkir', function () {
     return view('pilihparkir');
+});
+
+Route::get('/booking', function () {
+    return view('booking');
 });
