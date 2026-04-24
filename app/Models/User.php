@@ -46,4 +46,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    // Relasi: Satu user bisa punya banyak data kendaraan
+public function vehicles()
+{
+    return $this->hasMany(Vehicle::class);
 }
+}
+

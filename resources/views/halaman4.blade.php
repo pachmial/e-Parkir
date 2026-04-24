@@ -8,74 +8,63 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <div class="bg-white w-[320px] h-[700px] rounded-3xl p-5 flex flex-col">
+    <div class="bg-white w-[320px] h-[700px] rounded-3xl p-5 flex flex-col shadow-2xl overflow-hidden">
 
-        <!-- 🔝 TITLE -->
         <h1 class="text-center text-xl font-bold mt-10 mb-10">Register</h1>
 
-        <!-- 🔄 TOGGLE LOGIN / DAFTAR -->
-        <div class="flex bg-white rounded-xl border border-gray-300  mb-10">
-
-         <!-- LOGIN ( non aktif) -->
-        <button class="flex-1 py-2 rounded-xl text-black text-sm font-medium">
+        <div class="flex bg-white rounded-xl border border-gray-300 mb-10 overflow-hidden">
+            <a href="{{ url('/halaman3') }}" class="flex-1 py-2 text-center text-black text-sm font-medium hover:bg-gray-50">
                 Login
-        </button>
-        <!-- DAFTAR (aktif) -->
-        <button class="flex-1 py-2 rounded-xl text-white text-sm font-medium
-            bg-gradient-to-r from-[#0F1226] to-purple-600">
-            Daftar
-        </button>
-
+            </a>
+            <div class="flex-1 py-2 text-center text-white text-sm font-medium bg-gradient-to-r from-[#0F1226] to-purple-600">
+                Daftar
+            </div>
         </div>
 
-        <!-- 📄 FORM -->
-        <div class="flex flex-col gap-2">
-
-            <!-- email -->
-            <input 
+        <form action="{{ route('register.submit') }}" method="POST" class="flex flex-col gap-2">
+            @csrf <input 
                 type="text" 
+                name="nama_lengkap" 
                 placeholder="Nama Lengkap"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
+                required
             >
 
-            <!-- password -->
             <input 
                 type="email" 
+                name="email" 
                 placeholder="Masukkan Email"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
+                required
             >
-            <!-- password -->
+
             <input 
                 type="password" 
+                name="password" 
                 placeholder="Masukkan password"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
+                required
             >
-            <!-- password -->
+
             <input 
                 type="password" 
+                name="ulang_password" 
                 placeholder="Ulang password"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
+                required
             >
 
-            <!-- lupa password -->
-            <p class="text-sm text-gray-500">
-                Lupa password?
+            <button type="submit" class="mt-6 py-3 rounded-xl text-white font-semibold 
+                bg-gradient-to-r from-purple-500 to-[#1C1F4A] shadow-lg hover:opacity-90">
+                Daftar Sekarang
+            </button>
+        </form>
+
+        <div class="mt-auto mb-4">
+            <p class="text-xs text-center text-gray-600">
+                Sudah punya akun? 
+                <a href="{{ url('/halaman3') }}" class="font-semibold text-black">Login sekarang</a>
             </p>
-
-        </div>
-
-        <!-- 🔘 BUTTON LOGIN -->
-        <button class="mt-6 py-3 rounded-xl text-white font-semibold 
-            bg-gradient-to-r from-purple-500 to-[#1C1F4A] shadow-lg">
-            Login
-        </button>
-
-        <!-- 🔽 REGISTER -->
-        <div class="mt-10">
-        <p class="text-sm text-center mt-auto text-gray-600">
-            Sudah punya akun? 
-            <span class="font-semibold text-black">Login sekarang</span>
-        </p>
         </div>
 
     </div>
