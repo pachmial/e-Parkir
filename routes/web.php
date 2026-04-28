@@ -1,28 +1,33 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Models\User;
 
-Route::get('/', function () {
-    return view('splash');
-});
+Route::get('/', fn() => view('splash'));
+Route::get('/onboarding', fn() => view('onboarding'));
+Route::get('/login', fn() => view('login'));
+Route::get('/register', fn() => view('login'));
 
-Route::get('/halaman1', function () {
-    return view('halaman2');
-});
+Route::get('/beranda', fn() => view('beranda'));
+Route::get('/pilihparkir', fn() => view('pilihparkir'));
+
+Route::get('/tiket', fn() => view('tiket'));
+Route::get('/riwayat', fn() => view('riwayat'));
+Route::get('/akun', fn() => view('akun'));
+
+// halaman edit
+Route::get('/akun/edit', function () {
+    return view('editakun');
+
+})->name('akun.edit');
 
 
-Route::get('/halaman2', function () {
-    return view('halaman2');
-});
-Route::get('/halaman3', function () {
-    return view('halaman3');
-});
-Route::get('/halaman4', function () {
-    return view('halaman4');
-});
-Route::get('/halamanriwayat', function () {
-    return view('halamanriwayat');
-});
-Route::get('/pilihparkir', function () {
-    return view('pilihparkir');
+Route::get('/logout', function () {
+
+    Auth::logout(); 
+
+    return redirect('/login');
+
 });
