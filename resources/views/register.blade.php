@@ -13,7 +13,7 @@
         <h1 class="text-center text-xl font-bold mt-10 mb-10">Register</h1>
 
         <div class="flex bg-white rounded-xl border border-gray-300 mb-10 overflow-hidden">
-            <a href="{{ url('/halaman3') }}" class="flex-1 py-2 text-center text-black text-sm font-medium hover:bg-gray-50">
+            <a href="{{ url('/login') }}" class="flex-1 py-2 text-center text-black text-sm font-medium hover:bg-gray-50">
                 Login
             </a>
             <div class="flex-1 py-2 text-center text-white text-sm font-medium bg-gradient-to-r from-[#0F1226] to-purple-600">
@@ -24,7 +24,7 @@
         <form action="{{ route('register.submit') }}" method="POST" class="flex flex-col gap-2">
             @csrf <input 
                 type="text" 
-                name="nama_lengkap" 
+                name="nama" 
                 placeholder="Nama Lengkap"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
                 required
@@ -48,7 +48,7 @@
 
             <input 
                 type="password" 
-                name="ulang_password" 
+                name="kata_sandi_confirmation" 
                 placeholder="Ulang password"
                 class="bg-gray-100 px-3 py-3 rounded-xl outline-none"
                 required
@@ -63,7 +63,7 @@
         <div class="mt-auto mb-4">
             <p class="text-xs text-center text-gray-600">
                 Sudah punya akun? 
-                <a href="{{ url('/halaman3') }}" class="font-semibold text-black">Login sekarang</a>
+                <a href="{{ url('/login') }}" class="font-semibold text-black">Login sekarang</a>
             </p>
         </div>
 

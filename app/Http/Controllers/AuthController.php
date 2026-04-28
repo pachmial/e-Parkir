@@ -2,31 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengguna;
 use App\Models\User;
+use App\Models\TokenRefresh;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nama_lengkap' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
+    
+public function register(Request $request)
+{
+    $validate = $request->validate([
+        'nama' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+    ]);
 
-        User::create([
-            'name' => $request->nama_lengkap,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $userCreate = User::create([
+        'name' => $request->nama,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
 
-        // Balik ke Login setelah buat akun
-        return redirect('/halaman3')->with('success', 'Akun berhasil dibuat!');
-    } // Penutup fungsi register
+    return redirect('/login')->with('success', 'Akun berhasil dibuat!');
+}
+    // POST /api/auth/login
 
+    
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -38,7 +44,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // DIARAHKAN KE HALAMAN 1 SETELAH LOGIN SUKSES
-            return redirect('/halaman1');
+            return redirect('/onboarding');
         }
 
         return back()->withErrors([
@@ -46,12 +52,19 @@ class AuthController extends Controller
         ]);
     } // Penutup fungsi login
 
+    // POST /api/auth/logout
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/halaman3');
-    } // Penutup fungsi logout
+        $token = $request->bearerToken();
 
-} // Penutup CLASS AuthController (INI YANG TADI SALAH POSISI)
+        if ($token) {
+            TokenRefresh::where('token', hash('sha256', $token))
+                ->update(['dicabut' => true]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout berhasil',
+        ]);
+    }
+}

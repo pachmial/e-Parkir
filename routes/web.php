@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', function () {
     return view('splash');
@@ -30,16 +31,18 @@ Route::post('/register-proses', [AuthController::class, 'register'])->name('regi
 Route::post('/login-proses', [AuthController::class, 'login'])->name('login.proses');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/proses-register', [AuthController::class, 'register'])->name('register.submit');
-Route::post('/proses-login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/proses-login', [AuthConteroller::class, 'login'])->name('login.submit');
 
 // Menampilkan halaman
-Route::get('/halaman3', function () { return view('halaman3'); })->name('login');
-Route::get('/halaman4', function () { return view('halaman4'); });
+Route::get('/login', function () { return view('login'); })->name('login');
+Route::get('/register', function () { return view('register'); });
 
 // Memproses data
 Route::post('/proses-register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/proses-login', [AuthController::class, 'login'])->name('login.submit');
 
-Route::get('/halaman1', function () {
-    return view('halaman1'); // Pastikan kamu punya file halaman1.blade.php
+Route::get('/onboarding', function () {
+    return view('onboarding'); // Pastikan kamu punya file halaman1.blade.php
 })->middleware('auth'); // Opsional: supaya hanya yang sudah login bisa buka
+
+Route::post('/proses-booking', [BookingController::class, 'store'])->name('booking.store');

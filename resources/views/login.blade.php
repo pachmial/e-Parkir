@@ -24,10 +24,11 @@
                 <div class="flex-1 py-2 text-center text-white text-sm font-medium bg-gradient-to-r from-[#0F1226] to-purple-600">
                     Login
                 </div>
-                <a href="{{ url('/halaman4') }}" class="flex-1 py-2 text-center text-black text-sm font-medium hover:bg-gray-100">
+                <a href="{{ url('/register') }}" class="flex-1 py-2 text-center text-black text-sm font-medium hover:bg-gray-100">
                     Daftar
                 </a>
             </div>
+
 
             <form action="{{ route('login.submit') }}" method="POST">
                 @csrf <div class="flex flex-col gap-4">
@@ -38,14 +39,24 @@
                         class="bg-gray-100 px-4 py-3 rounded-xl outline-none"
                         required
                     >
-
+                    @error('email')
+                        <div class="alert alert-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    
                     <input 
                         type="password" 
                         name="password" 
                         placeholder="Masukkan password"
                         class="bg-gray-100 px-4 py-3 rounded-xl outline-none"
                         required
-                    >
+                        >
+                    @error('password')
+                        <div class="alert alert-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
 
                     @if($errors->any())
                         <p class="text-xs text-red-500">{{ $errors->first() }}</p>
@@ -64,7 +75,7 @@
 
             <p class="text-sm text-center mt-10 text-gray-600">
                 Belum punya akun? 
-                <a href="{{ url('/halaman4') }}" class="font-semibold text-black cursor-pointer">Daftar sekarang</a>
+                <a href="{{ url('/login') }}" class="font-semibold text-black cursor-pointer">Daftar sekarang</a>
             </p>
 
         </div>
