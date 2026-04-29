@@ -668,12 +668,30 @@ body {
 
 <div class="container">
 
+@if(session('success'))
+    <div style="
+        background:#dcfce7;
+        color:#16a34a;
+        padding:12px 20px;
+        border-radius:12px;
+        margin-bottom:16px;
+        font-size:13px;
+        font-weight:600;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    ">
+        ✅ {{ session('success') }}
+    </div>
+@endif
+
     <!-- HEADER -->
     <div class="header">
         <div class="user">
             <img src="{{ asset('avatar1.png') }}">
-            <span>Hello, Agus</span>
-        </div>
+<span>Hello, {{ optional(Auth::user())->nama }}
+</span>        
+</div>
         <div class="menu" onclick="openSidebar()">⋮</div>
     </div>
 

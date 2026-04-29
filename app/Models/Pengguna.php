@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Pengguna extends th
+class Pengguna extends Authenticatable
 {
     protected $table      = 'pengguna';
     protected $keyType    = 'string';
@@ -26,7 +26,12 @@ class Pengguna extends th
         'diperbarui_pada'  => 'datetime',
     ];
 
-    // Relasi
+    // Laravel butuh ini untuk auth
+    public function getAuthPassword()
+    {
+        return $this->kata_sandi;
+    }
+
     public function kendaraan(): HasMany
     {
         return $this->hasMany(Kendaraan::class, 'pengguna_id');

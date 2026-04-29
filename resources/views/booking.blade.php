@@ -1,3 +1,8 @@
+@php
+    $user = auth()->user();
+    $kendaraan = $user ? \App\Models\Kendaraan::where('pengguna_id', $user->id)->first() : null;
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -1679,12 +1684,15 @@
         <div class="formulir-inputs">
             <input class="formulir-input" type="text"
                 placeholder="Konfirmasi nama anda."
-                id="inputNama">
+                id="inputNama"
+                value="{{ $user->name ?? '' }}">
+
 
             <input class="formulir-input" type="text"
-                placeholder="Masukan plat nomor."
-                id="inputPlat"
-                oninput="this.value=this.value.toUpperCase()">
+            placeholder="Masukan plat nomor."
+            id="inputPlat"
+            oninput="this.value=this.value.toUpperCase()"
+            value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}">
 
             <input class="formulir-input" type="time"
                 id="inputJamAwal"
