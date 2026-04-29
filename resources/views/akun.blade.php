@@ -9,95 +9,77 @@
 
 <body class="bg-white flex items-center justify-center min-h-screen">
 
-<!-- CONTAINER -->
-<div class="
-    w-full 
-    max-w-sm md:max-w-xl 
-    bg-white 
-    rounded-3xl 
-    shadow-md 
-    p-5 md:p-8
-">
+<div class="w-full max-w-sm md:max-w-xl bg-white rounded-3xl shadow-md p-5 md:p-8">
 
-        <!-- BACK BUTTON -->
-           <div class="fixed top-4 left-4 z-50">
-            <button onclick="goBack()" class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md">
-                ←
-            </button>
-            </div>
+    <!-- BACK -->
+    <div class="fixed top-4 left-4 z-50">
+        <button onclick="goBack()" class="w-10 h-10 bg-white rounded-xl shadow-md">←</button>
+    </div>
 
     <!-- HEADER -->
-    <div class="flex items-center gap-3 mb-6">
-        <h1 class="font-semibold text-lg md:text-xl">Pengaturan Akun</h1>
-    </div>
+    <h1 class="font-semibold text-lg md:text-xl mb-6">Pengaturan Akun</h1>
 
     <!-- FOTO -->
     <div class="flex flex-col items-center mb-6">
-        <div class="w-24 h-24 md:w-28 md:h-28 rounded-xl overflow-hidden bg-white">
-            <img src="{{ asset('avatar1.png') }}"class="w-full h-full object-cover">
+        <div class="w-24 h-24 rounded-xl overflow-hidden">
+            <img src="{{ asset('avatar1.png') }}" class="w-full h-full object-cover">
         </div>
-
-        <div class="mt-3 text-sm text-gray-600 font-medium">
-            Lengkapi Profil anda
-        </div>
+        <p class="mt-3 text-sm text-gray-600">Lengkapi Profil anda</p>
     </div>
 
-    <!-- FORM -->
-    <div class="flex flex-col gap-4">
+    <!-- DATA USER -->
+    <div class="flex flex-col gap-3 mb-5">
+        <input type="text" value="{{ $user->nama }}" readonly ...>
+        <input type="email" value="{{ $user->email }}" readonly ...>
+        <input type="password" value="********" readonly class="bg-gray-100 p-3 rounded-xl">
+    </div>
 
-        <input type="text" placeholder="Konfirmasi Nama Anda"
-            class="bg-gray-100 px-4 py-3 rounded-xl outline-none text-sm md:text-base text-gray-500 appearance-none w-full cursor-pointer">
+    <!-- NOTIF -->
+    @if(session('success'))
+        <div class="bg-green-100 text-green-700 p-2 rounded mb-3">
+            {{ session('success') }}
+        </div>
+    @endif
 
-        <input type="email" placeholder="Email"
-            class="bg-gray-100 px-4 py-3 rounded-xl outline-none text-sm md:text-base text-gray-500 appearance-none w-full cursor-pointer">
+    <!-- FORM KENDARAAN -->
+   <form action="/save-kendaraan" method="POST">
+        @csrf
 
-        <input type="password" placeholder="Password"
-            class="bg-gray-100 px-4 py-3 rounded-xl outline-none text-sm md:text-base text-gray-500 appearance-none w-full cursor-pointer">
+        <p class="text-sm text-blue-600 mb-2">Lengkapi Data Kendaraan</p>
 
-            <div class=""mt-3 text-sm text-blue-600 font-medium">
-            Lengkapi Data Kendaraan anda
-            </div>
-        <select class="bg-gray-100 px-4 py-3 rounded-xl outline-none text-sm md:text-base text-gray-500 appearance-none w-full cursor-pointer">
-            <option value="" disabled selected>Jenis Kendaraan</option>
-            <option value="motor">Motor</option>
-            <option value="mobil">Mobil</option>
-            <option value="truck">Truck</option>
-            <option value="bus">Bus</option>
+        <select name="jenis_kendaraan" class="bg-gray-100 p-3 rounded-xl w-full mb-2">
+            <option disabled {{ !$kendaraan ? 'selected' : '' }}>Jenis Kendaraan</option>
+
+            <option value="motor" {{ ($kendaraan->jenis ?? '') == 'motor' ? 'selected' : '' }}>Motor</option>
+            <option value="mobil" {{ ($kendaraan->jenis ?? '') == 'mobil' ? 'selected' : '' }}>Mobil</option>
+            <option value="truck" {{ ($kendaraan->jenis ?? '') == 'truck' ? 'selected' : '' }}>Truck</option>
+            <option value="bus"   {{ ($kendaraan->jenis ?? '') == 'bus'   ? 'selected' : '' }}>Bus</option>
         </select>
 
-        <input type="" placeholder="Plat Nomor Kendaraan"
-            class="bg-gray-100 px-4 py-3 rounded-xl outline-none text-sm md:text-base text-gray-500 appearance-none w-full cursor-pointer">
+        <input type="text" name="plat_nomor"
+            value="{{ $kendaraan->plat_nomor ?? '' }}"
+            placeholder="Plat Nomor Kendaraan"
+            class="bg-gray-100 p-3 rounded-xl w-full mb-4">
 
-    </div>
+        <!-- BUTTON -->
+        <div class="flex gap-3">
+            <button type="button" onclick="resetForm()"
+                class="flex-1 bg-gray-200 py-3 rounded-xl">
+                Cancel
+            </button>
 
-    <!-- BUTTON -->
-    <div class="flex gap-3 mt-8">
+            <button type="submit"
+                class="flex-1 bg-[#1C1F4A] text-white py-3 rounded-xl">
+                Save
+            </button>
+        </div>
 
-<button onclick="resetForm()" class="
-    flex-1 
-    bg-gray-200 
-    py-3 
-    rounded-xl 
-    text-sm md:text-base
-">
-    Cancel
-</button>
-
-        <button class="
-            flex-1 
-            bg-[#1C1F4A] 
-            text-white 
-            py-3 
-            rounded-xl 
-            text-sm md:text-base
-        ">
-            Save
-        </button>
-
-    </div>
+    </form>
 
 </div>
+
 <script>
+
 function goBack() {
     if (document.referrer !== "") {
         window.history.back();

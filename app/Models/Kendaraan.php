@@ -25,6 +25,16 @@ class Kendaraan extends Model
         'diperbarui_pada' => 'datetime',
     ];
 
+    protected static function boot()
+{
+    parent::boot();
+    static::creating(function ($model) {
+        if (!$model->id) {
+            $model->id = \Illuminate\Support\Str::uuid();
+        }
+    });
+}
+
     // Relasi
     public function pengguna(): BelongsTo
     {

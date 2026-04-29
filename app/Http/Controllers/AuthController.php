@@ -16,41 +16,36 @@ class AuthController extends Controller
     
 public function register(Request $request)
 {
-    $validate = $request->validate([
-        'nama' => 'required',
-        'email' => 'required|email|unique:users,email',
+    $request->validate([
+        'nama'     => 'required',
+        'email'    => 'required|email|unique:pengguna,email',
         'password' => 'required|min:6',
     ]);
 
-    $userCreate = User::create([
-        'name' => $request->nama,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
+    Pengguna::create([
+        'id'         => \Illuminate\Support\Str::uuid(),
+        'nama'       => $request->nama,
+        'email'      => $request->email,
+        'kata_sandi' => \Illuminate\Support\Facades\Hash::make($request->password),
     ]);
 
     return redirect('/login')->with('success', 'Akun berhasil dibuat!');
 }
-    // POST /api/auth/login
 
-    
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $request->session()->regenerate();
+        return redirect('/beranda');
+    }
 
-            // DIARAHKAN KE HALAMAN 1 SETELAH LOGIN SUKSES
-            return redirect('/onboarding');
-        }
-
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
-    } // Penutup fungsi login
+    return back()->withErrors(['email' => 'Email atau password salah.']);
+} // Penutup fungsi login
 
     // POST /api/auth/logout
     public function logout(Request $request)
