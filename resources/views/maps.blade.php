@@ -827,7 +827,7 @@
     </div>
 
     {{-- Back Button --}}
-    <a href="{{ url('/') }}" class="back-btn">
+    <a href="{{ url('/beranda') }}" class="back-btn">
         <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -903,7 +903,7 @@
             </div>
             <div class="detail-info-item">
                 <div class="detail-info-label">Tarif</div>
-                <div class="detail-info-value">Rp3.000/jam</div>
+                <div class="detail-info-value">Rp3.300/jam</div>
             </div>
             <div class="detail-info-item">
                 <div class="detail-info-label">Jam Buka</div>

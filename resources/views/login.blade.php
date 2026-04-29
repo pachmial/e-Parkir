@@ -75,7 +75,7 @@
 
             <p class="text-sm text-center mt-10 text-gray-600">
                 Belum punya akun? 
-                <a href="{{ url('/login') }}" class="font-semibold text-black cursor-pointer">Daftar sekarang</a>
+                <a href="{{ url('/register') }}" class="font-semibold text-black cursor-pointer">Daftar sekarang</a>
             </p>
 
         </div>
