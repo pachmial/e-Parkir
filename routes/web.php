@@ -2,24 +2,33 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\QrController;
 use App\Http\Controllers\BookingController;
 
-Route::get('/', function () {
-    return view('splash');
-});
+Route::get('/', fn() => view('splash'));
+Route::get('/onboarding', fn() => view('onboarding'));
+Route::get('/login', fn() => view('login'));
+Route::get('/register', fn() => view('login'));
 
+Route::get('/beranda', fn() => view('beranda'));
 
-Route::get('/halaman2', function () {
-    return view('halaman2');
-});
 Route::get('/map', fn() => view('maps'));
 
-Route::get('/halamanriwayat', function () {
-    return view('halamanriwayat');
-});
-Route::get('/pilihparkir', function () {
-    return view('pilihparkir');
-});
+
+Route::get('/tiket', fn() => view('tiket'));
+Route::get('/riwayat', fn() => view('riwayat'));
+Route::get('/akun', fn() => view('akun'));
+
+Route::get('/succes', fn() => view('succes'));
+Route::get('/qrcode', [QrController::class, 'index']);
+
+
+
+// halaman edit
+Route::get('/akun/edit', function () {
+    return view('editakun');
+
+})->name('akun.edit');
 
 Route::get('/booking', function () {
     return view('booking');
@@ -41,8 +50,12 @@ Route::get('/register', function () { return view('register'); });
 Route::post('/proses-register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/proses-login', [AuthController::class, 'login'])->name('login.submit');
 
-Route::get('/onboarding', function () {
-    return view('onboarding'); // Pastikan kamu punya file halaman1.blade.php
-})->middleware('auth'); // Opsional: supaya hanya yang sudah login bisa buka
-
 Route::post('/proses-booking', [BookingController::class, 'store'])->name('booking.store');
+
+Route::get('/logout', function () {
+
+    Auth::logout(); 
+
+    return redirect('/login');
+
+});

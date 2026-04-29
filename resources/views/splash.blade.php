@@ -97,7 +97,7 @@ body {
 
 <script>
 setTimeout(() => {
-  window.location.href = "/halaman1";
+  window.location.href = "/onboarding";
 }, 3000);
 </script>
 

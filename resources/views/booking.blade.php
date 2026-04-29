@@ -1319,9 +1319,191 @@
     color: #fff;
 }
 
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;          /* tetap di bawah panel-right (z-index 250) */
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    backdrop-filter: blur(2px);
+    pointer-events: none;  /* ← TAMBAH INI, overlay gak nyegat klik */
+}
+
+
+/* ══════════════════════════════════════════
+   MOBILE: < 768px
+   ══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+    /* ── Header pill tetap center ── */
+    .booking-open .header-pill {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* ── Panel kiri: full width, full height ── */
+    .panel-left {
+        width: 100%;
+        height: 100%;
+        border-right: none;
+        transform: translateX(-100%);
+        z-index: 100;
+        transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+                    opacity 0.3s ease;
+    }
+
+    .panel-left.active {
+        transform: translateX(0);
+    }
+
+    /*
+       Mode "payment flow" — panel kiri disembunyikan
+       supaya panel kanan bisa full screen
+    */
+    .panel-left.mobile-hidden {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* ── Panel kanan: BOTTOM SHEET default ── */
+    .panel-right {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        max-height: 88vh;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        border-radius: 24px 24px 0 0;
+        margin-left: 0;
+        padding: 0 24px 32px;
+        transform: translateY(100%);       /* sembunyi di bawah */
+        transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+        overflow-y: auto;
+        z-index: 250;
+        box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+        justify-content: flex-start;
+    }
+
+    /* Handle bar di atas bottom sheet */
+    .panel-right::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 100px;
+        margin: 14px auto 20px;
+        flex-shrink: 0;
+    }
+
+    .panel-right.active {
+        transform: translateY(0);
+    }
+
+    /*
+       Mode "full screen" — saat masuk formulir/payment/ticket
+       Panel kanan jadi full screen dari atas
+    */
+    .panel-right.mobile-fullscreen {
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        padding-top: 20px;
+    }
+
+    /* ── Info card: sembunyikan di mobile ── */
+    .info-card {
+        display: none !important;
+    }
+
+    /* ── Back button lebih kecil ── */
+    .back-btn {
+        top: 16px;
+        left: 16px;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    /* ── Header pill naik sedikit ── */
+    .header-pill {
+        top: 16px;
+        padding: 8px 18px;
+    }
+
+    /* ── Panel left inner: padding top lebih kecil ── */
+    .panel-left-inner {
+        padding: 70px 20px 20px;
+    }
+
+    /* ── Slot grid: 3 kolom tetap, gap lebih kecil ── */
+    .slot-grid {
+        gap: 12px;
+    }
+
+    /* ── Panel right inner content ── */
+    #viewBooking, #viewTicket, #viewFormulir,
+    #viewPayment, #viewParkingTicket {
+        padding-bottom: 8px;
+    }
+
+    /* ── Booking title lebih kecil di mobile ── */
+    .booking-title {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    /* ── Formulir wrap height di fullscreen ── */
+    .panel-right.mobile-fullscreen .formulir-wrap {
+        min-height: calc(100vh - 80px);
+    }
+
+    /* ── Payment method list: bisa scroll ── */
+    .payment-method-list {
+        max-height: 180px;
+    }
+
+    /* ── Mobile back button di dalam panel kanan ── */
+    .mobile-back-in-panel {
+        display: flex !important;
+        align-items: center;
+        gap: 6px;
+        background: none;
+        border: none;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 16px;
+    }
+
+    .mobile-back-in-panel svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Desktop: sembunyikan elemen mobile-only */
+@media (min-width: 769px) {
+    .mobile-overlay { display: none !important; }
+    .mobile-back-in-panel { display: none !important; }
+    .panel-left.mobile-hidden { transform: translateX(0) !important; opacity: 1 !important; }
+    .panel-right.mobile-fullscreen { height: 100% !important; max-height: 100% !important; border-radius: 0 !important; }
+}
+
+
     </style>
 </head>
 <body>
+
+    <div class="mobile-overlay" id="mobileOverlay" ></div>
 
     {{-- Header Pill --}}
     <div class="header-pill">
@@ -1404,7 +1586,7 @@
                 </div>
                 <div class="booking-detail-item" style="text-align:right">
                     <div class="booking-detail-label">Tarif</div>
-                    <div class="booking-detail-value green">Rp3.000/Jam</div>
+                    <div class="booking-detail-value green">Rp3.300/Jam</div>
                 </div>
             </div>
         </div>
@@ -1469,7 +1651,7 @@
 
                 <div class="ticket-footer">
                     <div class="ticket-price">
-                        <span id="ticketPrice">Rp3.000</span>/jam
+                        <span id="ticketPrice">Rp3.300</span>/jam
                     </div>
                     <button class="next-btn" onclick="goToConfirm()">
                         Selanjutnya →
@@ -1524,7 +1706,7 @@
             </div>
             <div class="summary-row">
                 <span class="summary-label">Harga per/jam</span>
-                <span class="summary-value">Rp 3.000/Jam</span>
+                <span class="summary-value">Rp 3.300/Jam</span>
             </div>
             <div class="summary-row">
                 <span class="summary-label">PPN/Pajak</span>
@@ -1668,7 +1850,25 @@
 
         {{-- Vehicle Card --}}
         <div class="ptd-vehicle-card">
-            <div class="ptd-vehicle-icon">P</div>
+            <div class="ptd-vehicle-icon" style="background:transparent;position:relative;padding:0;">
+    <div style="
+        width:44px;height:44px;
+        border-radius:50%;
+        background:#16a34a;
+        display:flex;align-items:center;justify-content:center;
+        position:relative;
+    ">
+        <span style="color:#fff;font-size:22px;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;">P</span>
+        <div style="
+            position:absolute;
+            bottom:2px;right:2px;
+            width:10px;height:10px;
+            border-radius:50%;
+            background:#ef4444;
+            border:2px solid #fff;
+        "></div>
+    </div>
+</div>
             <div style="flex:1;">
                 <div class="ptd-vehicle-plate" id="ptdPlate">B 6797 OB</div>
                 <div class="ptd-vehicle-type">BYD M6</div>
@@ -1736,13 +1936,13 @@
             </div>
             <div>
                 <div class="info-card-loc-name" id="infoLocName">Mall BTM</div>
-                <div class="info-card-loc-zone" id="infoLocZone">Zone A · Bogor</div>
+                <div class="info-card-loc-zone" id="infoLocZone">Zone A-C · Bogor</div>
             </div>
         </div>
         <div class="info-stat-grid">
             <div class="info-stat-item">
                 <div class="info-stat-label">Tarif</div>
-                <div class="info-stat-value">Rp3.000</div>
+                <div class="info-stat-value">Rp3.300</div>
             </div>
             <div class="info-stat-item">
                 <div class="info-stat-label">Per</div>
@@ -1884,7 +2084,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
                 width:36px;height:36px;
                 border-radius:50% 50% 50% 0;
                 transform:rotate(-45deg);
-                background:linear-gradient(135deg,#1a1d27,#000000);
+                background:linear-gradient(135deg,#1eff00,#1eff00);
                 border:2px solid rgba(255,255,255,0.3);
                 display:flex;align-items:center;justify-content:center;
                 box-shadow:0 4px 16px rgba(74,222,128,0.4);
@@ -2183,9 +2383,277 @@ function submitPayment() {
 }
 
 function konfirmasiPembayaran() {
+    // window.location.href =
+    //     `/booking/success?slot=${encodeURIComponent(selectedSlot)}&location=${encodeURIComponent(locationId)}&payment=${encodeURIComponent(selectedPaymentMethod)}`;
     window.location.href =
-        `/booking/success?slot=${encodeURIComponent(selectedSlot)}&location=${encodeURIComponent(locationId)}&payment=${encodeURIComponent(selectedPaymentMethod)}`;
+        `/succes`;
 }
+
+
+const isMobile = () => window.innerWidth <= 768;
+
+const panelLeft   = document.getElementById('panelLeft');
+const panelRight  = document.getElementById('panelRight');
+const overlay     = document.getElementById('mobileOverlay');
+
+/* ─── Tampilkan overlay mobile ─── */
+function showMobileOverlay() {
+    overlay.style.display = 'block';
+    requestAnimationFrame(() => overlay.classList.add('visible'));
+}
+
+function hideMobileOverlay() {
+    overlay.classList.remove('visible');
+    setTimeout(() => { overlay.style.display = 'none'; }, 350);
+}
+
+/* ─── Tutup panel kanan (mobile) ─── */
+function closeMobilePanel() {
+    if (!isMobile()) return;
+    panelRight.classList.remove('active', 'mobile-fullscreen');
+    panelLeft.classList.remove('mobile-hidden');
+    hideMobileOverlay();
+
+    // Reset ke viewBooking
+    resetToBookingView();
+}
+
+/* ─── Reset semua view ke state awal ─── */
+function resetToBookingView() {
+    ['viewTicket','viewFormulir','viewPayment','viewParkingTicket'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.display = 'none';
+        el.style.opacity = '1';
+    });
+    const booking = document.getElementById('viewBooking');
+    booking.style.display = 'block';
+    booking.style.opacity = '1';
+}
+
+/* ─── Tombol kembali ke slot dari fullscreen ─── */
+function mobileBackToSlot() {
+    if (!isMobile()) return;
+    panelRight.classList.remove('mobile-fullscreen');
+    panelLeft.classList.remove('mobile-hidden');
+    // Kembali ke view booking (bottom sheet)
+    resetToBookingView();
+    // Tetap tampilkan bottom sheet
+    showMobileOverlay();
+}
+
+/* ══════════════════════════════════════════
+   OVERRIDE: selectSlot — tambah mobile behavior
+   ══════════════════════════════════════════ */
+const _origSelectSlot = selectSlot; // simpan asli jika ada
+// Override selectSlot dengan tambahan mobile logic
+// (Ganti fungsi selectSlot yang sudah ada dengan ini)
+function selectSlot(slotId) {
+    document.querySelectorAll('.slot-card.selected')
+        .forEach(el => el.classList.remove('selected'));
+
+    const card = document.getElementById(`slot-${slotId}`);
+    if (!card || card.classList.contains('occupied')) return;
+
+    card.classList.add('selected');
+    selectedSlot = slotId;
+
+    document.getElementById('selectedLabel').textContent = slotId;
+    document.getElementById('bookingSlotCode').textContent = slotId;
+
+    const now = new Date();
+    const jam = now.getHours().toString().padStart(2, '0');
+    const mnt = now.getMinutes().toString().padStart(2, '0');
+    document.getElementById('bookingTime').textContent = `${jam}:${mnt} Kedepan`;
+
+    // Desktop: seperti biasa
+    document.getElementById('panelRight').classList.add('active');
+    document.getElementById('infoCard').classList.add('hidden');
+
+    // Mobile: tampilkan sebagai bottom sheet
+    if (isMobile()) {
+        panelRight.classList.remove('mobile-fullscreen');
+        showMobileOverlay();
+    }
+}
+
+/* ══════════════════════════════════════════
+   OVERRIDE: submitBooking — tambah mobile fullscreen
+   ══════════════════════════════════════════ */
+const _origSubmitBooking = submitBooking;
+function submitBooking() {
+    if (!selectedSlot) return;
+
+    const now = new Date();
+    const jam = now.getHours().toString().padStart(2, '0');
+    const mnt = now.getMinutes().toString().padStart(2, '0');
+
+    document.getElementById('ticketSlotZone').textContent =
+        `${currentLoc.zone} · ${selectedSlot}`;
+    document.getElementById('ticketTime').textContent =
+        `${jam}:${mnt} – 23:59`;
+    document.getElementById('ticketSerial').textContent =
+        'No. ' + Math.floor(Math.random() * 900 + 100);
+
+    // Mobile: masuk fullscreen mode
+    if (isMobile()) {
+        panelLeft.classList.add('mobile-hidden');
+        panelRight.classList.add('mobile-fullscreen');
+        hideMobileOverlay();
+    }
+
+    const booking = document.getElementById('viewBooking');
+    const ticket  = document.getElementById('viewTicket');
+
+    booking.style.transition = 'opacity 0.25s';
+    booking.style.opacity = '0';
+    setTimeout(() => {
+        booking.style.display = 'none';
+        ticket.style.display  = 'block';
+        ticket.style.opacity  = '0';
+        ticket.style.transition = 'opacity 0.25s';
+        requestAnimationFrame(() => { ticket.style.opacity = '1'; });
+    }, 250);
+}
+
+/* ══════════════════════════════════════════
+   OVERRIDE: goToConfirm, submitFormulir,
+             submitPayment — pastikan tetap fullscreen
+   ══════════════════════════════════════════ */
+function goToConfirm() {
+    // Mobile: pastikan fullscreen
+    if (isMobile()) {
+        panelLeft.classList.add('mobile-hidden');
+        panelRight.classList.add('mobile-fullscreen');
+    }
+
+    const ticket   = document.getElementById('viewTicket');
+    const formulir = document.getElementById('viewFormulir');
+
+    ticket.style.transition = 'opacity 0.25s';
+    ticket.style.opacity = '0';
+    setTimeout(() => {
+        ticket.style.display   = 'none';
+        formulir.style.display = 'block';
+        formulir.style.opacity = '0';
+        formulir.style.transition = 'opacity 0.25s';
+        requestAnimationFrame(() => { formulir.style.opacity = '1'; });
+    }, 250);
+}
+
+function closeFormulir() {
+    const ticket   = document.getElementById('viewTicket');
+    const formulir = document.getElementById('viewFormulir');
+
+    formulir.style.transition = 'opacity 0.25s';
+    formulir.style.opacity = '0';
+    setTimeout(() => {
+        formulir.style.display = 'none';
+        ticket.style.display   = 'block';
+        ticket.style.opacity   = '0';
+        ticket.style.transition = 'opacity 0.25s';
+        requestAnimationFrame(() => { ticket.style.opacity = '1'; });
+    }, 250);
+}
+
+function submitFormulir() {
+    const nama  = document.getElementById('inputNama').value;
+    const plat  = document.getElementById('inputPlat').value;
+    const awal  = document.getElementById('inputJamAwal').value;
+    const akhir = document.getElementById('inputJamAkhir').value;
+
+    if (!nama || !plat || !awal || !akhir) {
+        alert('Lengkapi semua data terlebih dahulu!');
+        return;
+    }
+
+    if (isMobile()) {
+        panelLeft.classList.add('mobile-hidden');
+        panelRight.classList.add('mobile-fullscreen');
+    }
+
+    const formulir = document.getElementById('viewFormulir');
+    const payment  = document.getElementById('viewPayment');
+
+    formulir.style.transition = 'opacity 0.25s';
+    formulir.style.opacity = '0';
+    setTimeout(() => {
+        formulir.style.display = 'none';
+        payment.style.display  = 'block';
+        payment.style.opacity  = '0';
+        payment.style.transition = 'opacity 0.25s';
+        document.getElementById('paymentTotal').textContent =
+            document.getElementById('footerTotal').textContent;
+        requestAnimationFrame(() => { payment.style.opacity = '1'; });
+    }, 250);
+}
+
+function submitPayment() {
+    if (!selectedPaymentMethod) {
+        alert('Pilih metode pembayaran dulu!');
+        return;
+    }
+
+    const payment = document.getElementById('viewPayment');
+    const ptd     = document.getElementById('viewParkingTicket');
+
+    const plat  = document.getElementById('inputPlat').value;
+    const awal  = document.getElementById('inputJamAwal').value;
+    const akhir = document.getElementById('inputJamAkhir').value;
+    const nama  = document.getElementById('inputNama').value;
+    const total = document.getElementById('footerTotal').textContent;
+
+    document.getElementById('ptdPlate').textContent  = plat;
+    document.getElementById('ptdDetail').textContent =
+        `${currentLoc.zone} · ${selectedSlot} · ${currentLoc.name} · ${nama}`;
+    document.getElementById('ptdLogIn').textContent  = awal;
+    document.getElementById('ptdLogOut').textContent = akhir;
+    document.getElementById('ptdTotal').textContent  = total;
+
+    const today = new Date();
+    const tgl = `${today.getDate().toString().padStart(2,'0')}/${(today.getMonth()+1).toString().padStart(2,'0')}/${today.getFullYear()}`;
+    document.getElementById('ptdLogInDate').textContent  = tgl;
+    document.getElementById('ptdLogOutDate').textContent = tgl;
+
+    const paymentMap = {
+        wallet: { logo: '', number: 'IDR 2.000', sub: 'Account' },
+        bca:    { logo: "{{ asset('images/logobca.png') }}", number: '3056****5904', sub: 'Muhammad · 06/26' },
+        bri:    { logo: "{{ asset('images/bri.png') }}",    number: '5213****4854', sub: 'Muhammad · 06/26' },
+        dana:   { logo: "{{ asset('images/dana.png') }}",   number: '0812****3456', sub: 'Muhammad · Dana' },
+        gopay:  { logo: "{{ asset('images/gopay.png') }}",  number: '0812****3456', sub: 'Muhammad · GoPay' },
+    };
+
+    const pm = paymentMap[selectedPaymentMethod];
+    document.getElementById('ptdPaymentLogo').src           = pm.logo;
+    document.getElementById('ptdPaymentNumber').textContent = pm.number;
+    document.getElementById('ptdPaymentSub').textContent    = pm.sub;
+
+    if (isMobile()) {
+        panelLeft.classList.add('mobile-hidden');
+        panelRight.classList.add('mobile-fullscreen');
+    }
+
+    payment.style.transition = 'opacity 0.25s';
+    payment.style.opacity = '0';
+    setTimeout(() => {
+        payment.style.display = 'none';
+        ptd.style.display     = 'block';
+        ptd.style.opacity     = '0';
+        ptd.style.transition  = 'opacity 0.25s';
+        requestAnimationFrame(() => { ptd.style.opacity = '1'; });
+    }, 250);
+}
+
+/* ── Resize handler: reset mobile state kalau balik ke desktop ── */
+window.addEventListener('resize', () => {
+    if (!isMobile()) {
+        overlay.style.display = 'none';
+        overlay.classList.remove('visible');
+        panelLeft.classList.remove('mobile-hidden');
+        panelRight.classList.remove('mobile-fullscreen');
+    }
+});
+
+
     </script>
 </body>
 </html>
