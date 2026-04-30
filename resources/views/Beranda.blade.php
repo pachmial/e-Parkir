@@ -703,7 +703,7 @@ body {
             </div>
             <div>
                 <div class="stat-pill-label">Total Lokasi</div>
-                <div class="stat-pill-value">6 Tempat</div>
+                <div class="stat-pill-value">{{ $totalLokasi }} Tempat</div>
             </div>
         </div>
         <div class="stat-pill">

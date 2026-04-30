@@ -10,16 +10,19 @@ use App\Models\LokasiParkir; // ← TAMBAHAN
 class BerandaController extends Controller
 {
     // ─── BERANDA (BARU) ───────────────────────────────────────────────────────
-    public function index()
-    {
-        $parkirList = LokasiParkir::where('aktif', true)->get()->map(function ($item) {
-            return [
-                'nama'   => $item->nama,
-                'param'  => $item->id,
-                'lokasi' => $item->alamat,
-                'harga'  => 'Rp' . number_format($item->harga_per_jam, 0, ',', '.') . '/jam',
-                'rating' => '4.5',
-                'foto' => match(strtolower($item->nama)) {
+ public function index()
+{
+    $totalLokasi = LokasiParkir::where('aktif', true)->count();
+
+    $parkirList = LokasiParkir::where('aktif', true)->get()->map(function ($item) {
+        return [
+            'nama'   => $item->nama,
+            'param'  => $item->id,
+            'lokasi' => $item->alamat,
+            'harga'  => 'Rp' . number_format($item->harga_per_jam, 0, ',', '.') . '/jam',
+            'rating' => '4.5',
+
+            'foto' => match(strtolower($item->nama)) {
 
                 'stasiun bogor parkir center' => 'images/stasiun-1.png',
                 'plaza jambu dua' => 'images/jambu2-1.jpg',
@@ -34,12 +37,11 @@ class BerandaController extends Controller
 
                 default => 'images/default.jpg',
             },
-            ];
-        })->toArray();
+        ];
+    })->toArray();
 
-        return view('beranda', compact('parkirList'));
-    }
-
+    return view('beranda', compact('parkirList', 'totalLokasi'));
+}
     // ─── AKUN / PROFILE (TIDAK DIUBAH) ────────────────────────────────────────
     public function profile()
     {
