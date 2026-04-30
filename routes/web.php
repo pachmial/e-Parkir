@@ -62,3 +62,7 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect('/login');
 });
+
+
+
+Route::get('/booking/{id}', [ParkingController::class, 'show'])->name('parking.show');
