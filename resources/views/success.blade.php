@@ -250,6 +250,13 @@
   </div>
   <span class="success-label">Pembayaran berhasil !</span>
   <span class="amount">Rp 6.600</span>
+
+      @php
+    $orderId = request()->get('order_id');
+    @endphp
+
+    <p>Ref Number: {{ $orderId }}</p>
+
 </div>
 
 <!-- Detail Card -->

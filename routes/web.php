@@ -7,6 +7,19 @@ use App\Http\Controllers\QrController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BerandaController;
 
+
+Route::get('/booking', [BookingController::class, 'index']);
+Route::post('/get-snap-token', [BookingController::class, 'getSnapToken']);
+
+
+
+Route::get('/success', fn() => view('success'));
+Route::get('/qrcode', [QrController::class, 'index']);
+
+
+
+
+
 // ─── AKUN ─────────────────────────────────────────────────────────────────────
 Route::get('/akun', [BerandaController::class, 'profile'])
     ->name('akun')
@@ -21,23 +34,19 @@ Route::get('/onboarding', fn() => view('onboarding'));
 Route::get('/login', fn() => view('login'))->name('login');
 Route::get('/register', fn() => view('register'));
 
-Route::get('/beranda', [BerandaController::class, 'index']); // ← DIUBAH
+Route::get('/beranda', [BerandaController::class, 'index'])
+    ->middleware('auth');
 Route::get('/map', fn() => view('maps'));
 Route::get('/tiket', fn() => view('tiket'));
 Route::get('/riwayat', fn() => view('riwayat'));
 
-Route::get('/succes', fn() => view('succes'));
-Route::get('/qrcode', [QrController::class, 'index']);
+
 
 Route::get('/profile', [BerandaController::class, 'profile'])->middleware('auth');
 
 Route::get('/akun/edit', function () {
     return view('editakun');
 })->name('akun.edit');
-
-Route::get('/booking', function () {
-    return view('booking');
-});
 
 // ─── AUTH 
 Route::post('/register-proses', [AuthController::class, 'register'])->name('register.submit');

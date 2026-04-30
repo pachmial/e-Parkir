@@ -29,8 +29,8 @@
 
     <!-- DATA USER -->
     <div class="flex flex-col gap-3 mb-5">
-        <input type="text" value="{{ $user->nama }}" readonly ...>
-        <input type="email" value="{{ $user->email }}" readonly ...>
+        <input type="text" value="{{ $user->nama }}" readonly class="bg-gray-100 p-3 rounded-xl">
+        <input type="email" value="{{ $user->email }}" readonly class="bg-gray-100 p-3 rounded-xl">
         <input type="password" value="********" readonly class="bg-gray-100 p-3 rounded-xl">
     </div>
 
