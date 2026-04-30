@@ -1,11 +1,11 @@
-@php
-    $user = auth()->user();
-    $kendaraan = $user ? \App\Models\Kendaraan::where('pengguna_id', $user->id)->first() : null;
-@endphp
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('midtrans.client_key') }}">
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>e-Parkir · Booking</title>
@@ -1681,19 +1681,20 @@
 
         <div class="formulir-sub-title">Ticket details</div>
 
-        <div class="formulir-inputs">
-            <input class="formulir-input" type="text"
+       <input class="formulir-input"
+                type="text"
                 placeholder="Konfirmasi nama anda."
                 id="inputNama"
-                value="{{ $user->name ?? '' }}">
+                value="{{ $user->nama ?? '' }}"
+                readonly>
 
-
-            <input class="formulir-input" type="text"
-            placeholder="Masukan plat nomor."
-            id="inputPlat"
-            oninput="this.value=this.value.toUpperCase()"
-            value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}">
-
+            <input class="formulir-input"
+                type="text"
+                placeholder="Masukan plat nomor."
+                id="inputPlat"
+                value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}"
+                readonly>
+                
             <input class="formulir-input" type="time"
                 id="inputJamAwal"
                 oninput="hitungDurasi()">
@@ -2391,10 +2392,29 @@ function submitPayment() {
 }
 
 function konfirmasiPembayaran() {
-    // window.location.href =
-    //     `/booking/success?slot=${encodeURIComponent(selectedSlot)}&location=${encodeURIComponent(locationId)}&payment=${encodeURIComponent(selectedPaymentMethod)}`;
-    window.location.href =
-        `/succes`;
+
+
+    fetch('/get-snap-token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        snap.pay(data.snapToken, {
+            onSuccess: function(result){
+                window.location.href = "/success?order_id=" + result.order_id;
+            },
+            onPending: function(result){
+                alert("Menunggu pembayaran...");
+            },
+            onError: function(result){
+                alert("Pembayaran gagal!");
+            }
+        });
+    });
 }
 
 
@@ -2564,6 +2584,7 @@ function closeFormulir() {
 }
 
 function submitFormulir() {
+
     const nama  = document.getElementById('inputNama').value;
     const plat  = document.getElementById('inputPlat').value;
     const awal  = document.getElementById('inputJamAwal').value;
@@ -2574,25 +2595,63 @@ function submitFormulir() {
         return;
     }
 
-    if (isMobile()) {
-        panelLeft.classList.add('mobile-hidden');
-        panelRight.classList.add('mobile-fullscreen');
-    }
+    // Ambil nilai total dan ubah dari teks "Rp3.600" menjadi angka murni 3600
+    const totalText = document.getElementById('footerTotal').textContent;
+    const totalAngka = parseInt(totalText.replace(/[^0-9]/g, ''), 10);
 
-    const formulir = document.getElementById('viewFormulir');
-    const payment  = document.getElementById('viewPayment');
+    // UX: Ubah state tombol saat proses fetch berjalan
+    const btn = document.querySelector('#viewFormulir .booking-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Memproses...';
+    btn.disabled = true;
 
-    formulir.style.transition = 'opacity 0.25s';
-    formulir.style.opacity = '0';
-    setTimeout(() => {
-        formulir.style.display = 'none';
-        payment.style.display  = 'block';
-        payment.style.opacity  = '0';
-        payment.style.transition = 'opacity 0.25s';
-        document.getElementById('paymentTotal').textContent =
-            document.getElementById('footerTotal').textContent;
-        requestAnimationFrame(() => { payment.style.opacity = '1'; });
-    }, 250);
+    // Kirim data ke backend Laravel untuk mendapatkan snapToken
+    fetch('/get-snap-token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Pastikan token CSRF Laravel terbaca
+        },
+        body: JSON.stringify({
+            nama: nama,
+            plat_nomor: plat,
+            jam_awal: awal,
+            jam_akhir: akhir,
+            slot: selectedSlot,
+            lokasi: currentLoc.name,
+            total_bayar: totalAngka
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Kembalikan state tombol
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+
+        // Munculkan Pop-up Midtrans Snap
+        snap.pay(data.snapToken, {
+            onSuccess: function(result){
+                // Arahkan ke halaman sukses atau invoice
+                window.location.href = "/success?order_id=" + result.order_id;
+            },
+            onPending: function(result){
+                alert("Menunggu pembayaran...");
+            },
+            onError: function(result){
+                alert("Pembayaran gagal!");
+            },
+            onClose: function(){
+                // Trigerred jika user menutup pop up tanpa bayar
+                alert('Kamu menutup pop-up sebelum menyelesaikan pembayaran');
+            }
+        });
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan saat memproses pembayaran.");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 }
 
 function submitPayment() {
