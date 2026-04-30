@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
-use App\Models\User;
 use App\Models\TokenRefresh;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

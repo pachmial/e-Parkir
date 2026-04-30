@@ -754,20 +754,10 @@ body {
                 {{-- ── TAMBAHAN: Label section ── --}}
                 <div class="section-label">Lokasi Tersedia</div>
 
-                <div class="parking-scroll">
-
-                    @php
-                        $parkirList = [
-                            ['nama' => 'Mall BTM', "param" => 'btm', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.5', 'foto' => 'images/btm-1.jpg'],
-                            ['nama' => 'Boxies 123', "param" => 'boxies', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.2', 'foto' => 'images/boxies-1.jpg'],
-                            ['nama' => 'Lippo Plaza', "param" => 'lippo', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.7', 'foto' => 'images/lippo-1.jpg'],
-                            ['nama' => 'Botani Square', "param" => 'botani', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.3', 'foto' => 'images/botani-1.webp'],
-                            ['nama' => 'Cibinong City Mall', "param" => 'cibinong%20city', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.1', 'foto' => 'images/cibinong-1.webp'],
-                            ['nama' => 'Jambu Dua', "param" => 'jambu2', 'lokasi' => 'Bogor, ID', 'harga' => 'Rp3.300/jam', 'rating' => '4.0', 'foto' => 'images/jambu2-1.jpg'],
-                        ];
-                    @endphp
+               <div class="parking-scroll">
 
                     @foreach ($parkirList as $parkir)
+
                     <div class="p-card" onclick="window.open('/booking?location={{ $parkir['param'] }}')">
                         <div class="p-card-img">
                             <img src="{{ asset($parkir['foto']) }}" alt="{{ $parkir['nama'] }}">

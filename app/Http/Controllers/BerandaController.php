@@ -19,7 +19,21 @@ class BerandaController extends Controller
                 'lokasi' => $item->alamat,
                 'harga'  => 'Rp' . number_format($item->harga_per_jam, 0, ',', '.') . '/jam',
                 'rating' => '4.5',
-                'foto'   => 'images/default.jpg',
+                'foto' => match(strtolower($item->nama)) {
+
+                'stasiun bogor parkir center' => 'images/stasiun-1.png',
+                'plaza jambu dua' => 'images/jambu2-1.jpg',
+                'boxies 123 mall' => 'images/boxies-1.jpg',
+                'cibinong city mall' => 'images/cibinong-1.webp',
+                'bogor trade mall (btm)' => 'images/btm-1.jpg',
+                'aeon mall sentul city' => 'images/aeon-1.png',
+                'botani square mall' => 'images/botani-1.png',
+                'transmart yasmin' => 'images/transmart-1.png',
+                'lippo plaza keboen raya' => 'images/lippo-1.jpg',
+                'ramayana bogor trade center' => 'images/ramayana-1.webp',
+
+                default => 'images/default.jpg',
+            },
             ];
         })->toArray();
 
