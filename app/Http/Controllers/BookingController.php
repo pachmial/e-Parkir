@@ -3,18 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\LokasiParkir;
 
 class BookingController extends Controller
 {
-    public function index()
-    {
     
-        $pembayaran = \DB::table('pembayaran')
-    ->where('referensi_pembayaran', $orderId)
-    ->first();
-    return view('booking');
-    }
+    /**
+     * Display a listing of the resource.
+     */
 
+        public function index(Request $request)
+    {
+        $lokasiId = $request->location;
+
+        $lokasi = LokasiParkir::find($lokasiId);
+
+        return view('booking', compact('lokasi'));
+    }
+    
     public function getSnapToken(Request $request)
     {
         \Midtrans\Config::$serverKey = config('midtrans.server_key');

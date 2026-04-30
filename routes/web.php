@@ -48,10 +48,6 @@ Route::get('/akun/edit', function () {
     return view('editakun');
 })->name('akun.edit');
 
-Route::get('/booking', function () {
-    return view('booking');
-});
-
 // ─── AUTH 
 Route::post('/register-proses', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/login-proses', [AuthController::class, 'login'])->name('login.proses');
