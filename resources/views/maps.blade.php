@@ -347,7 +347,7 @@
         }
         .book-btn {
             padding: 12px 28px;
-            background: linear-gradient(135deg, var(--accent), #ffffff);
+            background: #34df76;
             color: #0f1117;
             border: none;
             border-radius: 12px;
@@ -632,7 +632,7 @@
 .detail-book-btn {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, var(--accent), #ffffff);
+    background: #34df76;
     color: #0f1117;
     border: none;
     border-radius: 14px;
@@ -646,7 +646,7 @@
 .detail-book-btn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(74,222,128,0.25);
+    box-shadow: 0 8px 24px rgba(52,223,118,0.4);
 }
 
 .detail-book-btn:disabled {

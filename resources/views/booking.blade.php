@@ -427,7 +427,7 @@
 
 .next-btn {
     padding: 12px 24px;
-    background: linear-gradient(135deg, var(--accent), #ffffff);
+    background: #34df76;
     color: #0f1117;
     border: none;
     border-radius: 12px;
@@ -441,7 +441,8 @@
 .next-btn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(74,222,128,0.3);
+    box-shadow: 0 8px 24px rgba(52,223,118,0.4);
+
 }
 
 /* Transisi panel kanan */
@@ -567,7 +568,9 @@
         .booking-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, var(--accent), #ffffff);
+            background: #34df76;
+
+
             color: #0f1117;
             border: none;
             border-radius: 14px;
@@ -582,7 +585,9 @@
         .booking-btn:hover {
             opacity: 0.9;
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(74,222,128,0.3);
+            box-shadow: 0 8px 24px rgba(52,223,118,0.4);
+
+
         }
 
         .booking-btn:active {
