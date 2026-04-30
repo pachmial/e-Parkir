@@ -749,7 +749,7 @@ body {
                 <i class="bi bi-search search-icon"></i>
             </div>
 
-            <!-- HORIZONTAL SCROLL PARKIR -->
+<!-- HORIZONTAL SCROLL PARKIR -->
             <div class="parking-scroll-wrapper">
                 {{-- ── TAMBAHAN: Label section ── --}}
                 <div class="section-label">Lokasi Tersedia</div>
@@ -781,8 +781,7 @@ body {
                             </div>
                         </div>
                     </div>
-                    @endforeach
-
+                    @endforeach                
                 </div>
             </div>
 

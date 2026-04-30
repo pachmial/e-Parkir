@@ -65,6 +65,26 @@ class PemesananController extends Controller
             'catatan'      => 'nullable|string',
         ]);
 
+            $booking = Pemesanan::create([
+        'id' => Str::uuid(), // Sesuai tipe char(36) di foto DB kamu
+        'pengguna_id' => auth()->id(),
+        'slot_id' => $request->slot_id, // Dari pilihan di Foto 6
+        'kendaraan_id' => $request->kendaraan_id, // ID kendaraan yang tadi diambil
+        'kode_pemesanan' => 'ORDER-' . time(),
+        'waktu_mulai' => $request->waktu_mulai,
+        'total_harga' => $request->total_harga,
+        'status' => 'menunggu'
+    ]);
+
+    Pembayaran::create([
+        'id' => Str::uuid(),
+        'pemesanan_id' => $booking->id,
+        'jumlah' => $booking->total_harga,
+        'metode' => 'Bank BCA',
+        'status' => 'menunggu'
+    ]);
+        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -99,11 +119,7 @@ class PemesananController extends Controller
         // Update status slot menjadi dipesan
         $slot->update(['status' => 'dipesan']);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pemesanan berhasil dibuat',
-            'data'    => $pemesanan->load('slotParkir.lokasiParkir'),
-        ], 201);
+return response()->json(['success' => true, 'booking_id' => $booking->id]);
     }
 
     // PUT /api/pemesanan/{id}/selesai
@@ -118,7 +134,7 @@ class PemesananController extends Controller
             ], 404);
         }
 
-        if ($pemesanan->status !== 'aktif') {
+        if ($pemesanan->status !== 'lunas') {
             return response()->json([
                 'success' => false,
                 'message' => 'Pemesanan tidak sedang aktif',

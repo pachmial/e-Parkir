@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pemesanan extends Model
 {
+
+
+
     protected $table      = 'pemesanan';
     protected $keyType    = 'string';
     public    $incrementing = false;
@@ -35,6 +38,8 @@ class Pemesanan extends Model
         return $this->belongsTo(Pengguna::class, 'pengguna_id');
     }
 
+
+    
     public function slotParkir(): BelongsTo
     {
         return $this->belongsTo(SlotParkir::class, 'slot_id');
@@ -55,4 +60,6 @@ class Pemesanan extends Model
     {
         return in_array($this->status, ['menunggu', 'aktif']);
     }
+
+    
 }

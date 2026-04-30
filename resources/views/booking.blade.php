@@ -1505,6 +1505,9 @@
 
 
     </style>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body>
 
@@ -1619,7 +1622,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="vehicle-name">BYD M6</div>
+                    <div class="vehicle-name">—</div>
                     <div class="vehicle-type">Kendaraan Pribadi</div>
                 </div>
             </div>
@@ -1681,19 +1684,16 @@
 
         <div class="formulir-sub-title">Ticket details</div>
 
-       <input class="formulir-input"
-                type="text"
+        <div class="formulir-inputs">
+            <input class="formulir-input" type="text"
                 placeholder="Konfirmasi nama anda."
-                id="inputNama"
-                value="{{ $user->nama ?? '' }}"
-                readonly>
+                id="inputNama">
 
-            <input class="formulir-input"
-                type="text"
+            <input class="formulir-input" type="text"
                 placeholder="Masukan plat nomor."
                 id="inputPlat"
-                value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}"
-                readonly>
+                oninput="this.value=this.value.toUpperCase()">
+
             <input class="formulir-input" type="time"
                 id="inputJamAwal"
                 oninput="hitungDurasi()">
@@ -1879,7 +1879,7 @@
 </div>
             <div style="flex:1;">
                 <div class="ptd-vehicle-plate" id="ptdPlate">B 6797 OB</div>
-                <div class="ptd-vehicle-type">BYD M6</div>
+                <div class="ptd-vehicle-type">—</div>
                 <div class="ptd-vehicle-detail" id="ptdDetail">Zone A-012 · Parking Mall BTM · Muhammad</div>
             </div>
         </div>
@@ -2003,6 +2003,40 @@
         const urlParams   = new URLSearchParams(window.location.search);
         const locationId  = urlParams.get('location') || 'btm';
         const preselected = urlParams.get('slot') || null;
+
+
+        // ── FETCH KENDARAAN USER ──
+let kendaraanUtama = null;
+
+@auth
+fetch('/api/pengguna/{{ auth()->id() }}/kendaraan')
+    .then(res => res.json())
+    .then(data => {
+        if (data.success && data.data.length > 0) {
+            // Ambil kendaraan utama (sudah diurutkan oleh controller)
+            kendaraanUtama = data.data[0];
+            updateKendaraanUI(kendaraanUtama);
+        }
+    })
+    .catch(err => console.error('Gagal fetch kendaraan:', err));
+@endauth
+
+function updateKendaraanUI(k) {
+    const namaKendaraan = [k.merek, k.model].filter(Boolean).join(' ') || k.plat_nomor;
+    const jenisKendaraan = k.jenis
+        ? k.jenis.charAt(0).toUpperCase() + k.jenis.slice(1)
+        : 'Kendaraan Pribadi';
+
+    // viewTicket — vehicle card
+    document.querySelector('#viewTicket .vehicle-name').textContent = namaKendaraan;
+    document.querySelector('#viewTicket .vehicle-type').textContent = jenisKendaraan;
+
+    // viewParkingTicket — ptd vehicle type
+    document.querySelector('.ptd-vehicle-type').textContent = namaKendaraan;
+
+    // Auto-fill plat nomor di formulir
+    document.getElementById('inputPlat').value = k.plat_nomor;
+}
 
 const locationsData = {
     btm: {
@@ -2391,30 +2425,49 @@ function submitPayment() {
 }
 
 function konfirmasiPembayaran() {
-
-
     fetch('/get-snap-token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({
+            gross_amount: parseInt(document.getElementById('footerTotal').textContent.replace(/[^0-9]/g, ''), 10),
+            nama: document.getElementById('inputNama').value,
+        })
     })
     .then(res => res.json())
     .then(data => {
         snap.pay(data.snapToken, {
             onSuccess: function(result){
-                window.location.href = "/success?order_id=" + result.order_id;
+                const totalAngka = parseInt(document.getElementById('footerTotal').textContent.replace(/[^0-9]/g, ''), 10);
+                const params = new URLSearchParams({
+                    order_id:     result.order_id,
+                    gross_amount: totalAngka,
+                    jam_awal:     document.getElementById('inputJamAwal').value,
+                    jam_akhir:    document.getElementById('inputJamAkhir').value,
+                    slot:         selectedSlot,
+                    plat_nomor:   document.getElementById('inputPlat').value,
+                });
+                window.location.href = "/success?" + params.toString();
             },
             onPending: function(result){
                 alert("Menunggu pembayaran...");
             },
             onError: function(result){
                 alert("Pembayaran gagal!");
+            },
+            onClose: function(){
+                alert("Kamu menutup pop-up sebelum menyelesaikan pembayaran.");
             }
         });
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Terjadi kesalahan saat memproses pembayaran.");
     });
 }
+
 
 
 const isMobile = () => window.innerWidth <= 768;
@@ -2629,10 +2682,20 @@ function submitFormulir() {
 
         // Munculkan Pop-up Midtrans Snap
         snap.pay(data.snapToken, {
-            onSuccess: function(result){
-                // Arahkan ke halaman sukses atau invoice
-                window.location.href = "/success?order_id=" + result.order_id;
-            },
+    onSuccess: function(result){
+        const totalAngka = parseInt(document.getElementById('footerTotal').textContent.replace(/[^0-9]/g, ''), 10);
+        const params = new URLSearchParams({
+            order_id:     result.order_id,
+            gross_amount: totalAngka,
+            jam_awal:     document.getElementById('inputJamAwal').value,
+            jam_akhir:    document.getElementById('inputJamAkhir').value,
+            slot:         selectedSlot,
+            plat_nomor:   document.getElementById('inputPlat').value,
+        });
+        setTimeout(function(){
+            window.location.href = "/success?" + params.toString();
+        }, 500);
+    },
             onPending: function(result){
                 alert("Menunggu pembayaran...");
             },
@@ -2718,6 +2781,23 @@ window.addEventListener('resize', () => {
         panelRight.classList.remove('mobile-fullscreen');
     }
 });
+
+async function loadVehicleData(penggunaId) {
+    const response = await fetch(`/api/kendaraan/${penggunaId}`);
+    const result = await response.json();
+
+    if (result.success && result.data.length > 0) {
+        // Ambil kendaraan utama (index 0 karena sudah di-sort 'utama' desc)
+        const v = result.data[0];
+
+        const displayName = (v.merk && v.model) ? `${v.merk} ${v.model}` : v.plat_nomor;
+        document.querySelector('.vehicle-name').innerText = displayName;
+
+        const platInput = document.querySelector('input[placeholder="F 1990 AN"]');
+        if(platInput) platInput.value = v.plat_nomor;
+        document.querySelector('#selected_kendaraan_id').value = v.id;
+    }
+}
 
 
     </script>

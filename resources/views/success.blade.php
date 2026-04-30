@@ -237,7 +237,7 @@
 </head>
 <body>
 
-<button class="back-btn">
+<button class="back-btn" onclick="window.history.back()">
   <svg viewBox="0 0 24 24" fill="none"><polyline points="15 18 9 12 15 6"/></svg>
 </button>
 
@@ -249,14 +249,13 @@
     </svg>
   </div>
   <span class="success-label">Pembayaran berhasil !</span>
-  <span class="amount">Rp 6.600</span>
+  
+  <!-- Sekarang $pembayaran sudah ada isinya -->
+  <span class="amount">
+    Rp {{ $pembayaran ? number_format($pembayaran->jumlah, 0, ',', '.') : '0' }}
+  </span>
 
-      @php
-    $orderId = request()->get('order_id');
-    @endphp
-
-    <p>Ref Number: {{ $orderId }}</p>
-
+  <p>Ref Number: {{ $orderId }}</p>
 </div>
 
 <!-- Detail Card -->
@@ -268,39 +267,43 @@
 
   <div class="detail-row">
     <span class="row-label">Ref Number</span>
-    <span class="row-value mono">000085752257</span>
+    <span class="row-value mono">{{ $pembayaran->referensi_pembayaran ?? '-' }}</span>
   </div>
+
   <div class="detail-row">
     <span class="row-label">Payment Status</span>
     <span class="row-value">
-      <span class="badge-success">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-3.5-3.5 1.41-1.41L10 13.67l6.09-6.09L17.5 9l-7.5 7.5z"/></svg>
-        Berhasil
-      </span>
+        <span class="badge-success">
+            <svg viewBox="0 0 24 24" style="width:16px; fill:currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            {{ ucfirst($pembayaran->status ?? 'Berhasil') }}
+        </span>
     </span>
   </div>
+
   <div class="detail-row">
     <span class="row-label">Payment Time</span>
-    <span class="row-value mono">25-12-2026 10:45:16</span>
+    <span class="row-value mono">
+        {{ ($pembayaran && $pembayaran->dibayar_pada) 
+            ? \Carbon\Carbon::parse($pembayaran->dibayar_pada)->format('d-m-Y H:i:s') 
+            : now()->format('d-m-Y H:i:s') }}
+    </span>
   </div>
+
   <div class="detail-row row-total">
     <span class="row-label">Total Payment</span>
-    <span class="row-value">Rp 6.600</span>
+    <span class="row-value">
+        Rp {{ $pembayaran ? number_format($pembayaran->jumlah, 0, ',', '.') : '0' }}
+    </span>
   </div>
 </div>
 
-<!-- Redirect Bar -->
 <div class="redirect-bar">
-    <button onclick="goqrcode()" class="next-btn">
-        Next
-    </button>
+    <button onclick="goqrcode()" class="next-btn">Next</button>
 </div>
 
 <script>
     function goqrcode() {
-    window.location.href = "/qrcode";
-
-}
-</script>
-</body>
+        window.location.href = "/qrcode";
+    }
+</script></body>
 </html>
