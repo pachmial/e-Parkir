@@ -1694,7 +1694,6 @@
                 id="inputPlat"
                 value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}"
                 readonly>
-                
             <input class="formulir-input" type="time"
                 id="inputJamAwal"
                 oninput="hitungDurasi()">
