@@ -3,16 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\LokasiParkir;
 
 class BookingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-         public function index()
-    {
-        return view('booking');
-    }
+
+        public function index(Request $request)
+{
+    $lokasiId = $request->location;
+
+    $lokasi = LokasiParkir::find($lokasiId);
+
+    return view('booking', compact('lokasi'));
+}
+    
 
  public function getSnapToken(Request $request)
     {

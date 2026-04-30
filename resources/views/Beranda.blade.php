@@ -703,7 +703,7 @@ body {
             </div>
             <div>
                 <div class="stat-pill-label">Total Lokasi</div>
-                <div class="stat-pill-value">{{ $totalLokasi }} Tempat</div>
+                <div class="stat-pill-value">6 Tempat</div>
             </div>
         </div>
         <div class="stat-pill">
@@ -754,11 +754,24 @@ body {
                 {{-- ── TAMBAHAN: Label section ── --}}
                 <div class="section-label">Lokasi Tersedia</div>
 
-               <div class="parking-scroll">
+                <div class="parking-scroll">
 
+                    @php
+                        $parkirList = [
+                            ['id' => '196fa7e4-295e-4e70-a757-82aab97226ed', 'nama' => 'Stasiun Bogor Parkir Center', 'lokasi' => 'Jl. Nyi Raja Permas, Cibogor', 'harga' => 'Rp3.000/jam', 'rating' => '4.5', 'foto' => 'images/stasiun-1.jpg'],
+                            ['id' => '2d7457a0-3abf-4838-ae83-190675dd6070', 'nama' => 'Plaza Jambu Dua', 'lokasi' => 'Jl. Ahmad Yani No.1, Bantarjati', 'harga' => 'Rp3.000/jam', 'rating' => '4.2', 'foto' => 'images/jambu2-1.jpg'],
+                            ['id' => '41c4e741-60a2-471f-9a08-fcc436e38b5a', 'nama' => 'Boxies 123 Mall', 'lokasi' => 'Jl. Raya Tajur No.123, Tajur', 'harga' => 'Rp3.000/jam', 'rating' => '4.2', 'foto' => 'images/boxies-1.jpg'],
+                            ['id' => '4c41d525-24f7-46db-a4f9-b4a0ca3d4050', 'nama' => 'Cibinong City Mall', 'lokasi' => 'Jl. Tegar Beriman No.1, Pakansari', 'harga' => 'Rp5.000/jam', 'rating' => '4.1', 'foto' => 'images/cibinong-1.webp'],
+                            ['id' => '623ba138-8f7f-41ca-b1fa-357d4c35389d', 'nama' => 'Bogor Trade Mall (BTM)', 'lokasi' => 'Jl. Ir. H. Juanda No.68, Paledang', 'harga' => 'Rp4.000/jam', 'rating' => '4.5', 'foto' => 'images/btm-1.jpg'],
+                            ['id' => '8319d00e-dab7-4ba7-a76f-7b4bb357affb', 'nama' => 'Aeon Mall Sentul City', 'lokasi' => 'Jl. MH. Thamrin, Citaringgul', 'harga' => 'Rp5.000/jam', 'rating' => '4.6', 'foto' => 'images/aeon-1.jpg'],
+                            ['id' => '9117b7fd-bc4a-4f6f-9f31-f1ca798e6ceb', 'nama' => 'Botani Square Mall', 'lokasi' => 'Jl. Raya Pajajaran No.40', 'harga' => 'Rp5.000/jam', 'rating' => '4.3', 'foto' => 'images/botani-1.webp'],
+                            ['id' => 'a9d2548b-ce1a-430c-96b5-f4faf3a1c189', 'nama' => 'Transmart Yasmin', 'lokasi' => 'Jl. KH. R. Abdullah Bin Nuh', 'harga' => 'Rp4.000/jam', 'rating' => '4.0', 'foto' => 'images/transmart-1.jpg'],
+                            ['id' => 'f636ae87-0bff-49eb-a481-ea4932bb3b89', 'nama' => 'Lippo Plaza Keboen Raya', 'lokasi' => 'Jl. Malabar No.175', 'harga' => 'Rp4.000/jam', 'rating' => '4.1', 'foto' => 'images/lippo-1.jpg'],
+                            ['id' => 'ffe8e13e-bc0d-4f9f-b018-de1a89165e08', 'nama' => 'Ramayana Bogor Trade Center', 'lokasi' => 'Jl. KH. Sholeh Iskandar', 'harga' => 'Rp3.000/jam', 'rating' => '4.0', 'foto' => 'images/ramayana-1.webp'],
+                        ];
+                        @endphp
                     @foreach ($parkirList as $parkir)
-
-                    <div class="p-card" onclick="window.open('/booking?location={{ $parkir['param'] }}')">
+                    <div class="p-card"onclick="window.location.href='/booking?location={{ $parkir['id'] }}'">
                         <div class="p-card-img">
                             <img src="{{ asset($parkir['foto']) }}" alt="{{ $parkir['nama'] }}">
                         </div>

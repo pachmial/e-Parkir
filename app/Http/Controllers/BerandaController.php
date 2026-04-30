@@ -15,23 +15,24 @@ class BerandaController extends Controller
     $totalLokasi = LokasiParkir::where('aktif', true)->count();
 
     $parkirList = LokasiParkir::where('aktif', true)->get()->map(function ($item) {
+        
         return [
             'nama'   => $item->nama,
-            'param'  => $item->id,
+            'param' => $item->id,
             'lokasi' => $item->alamat,
             'harga'  => 'Rp' . number_format($item->harga_per_jam, 0, ',', '.') . '/jam',
             'rating' => '4.5',
-
+            
             'foto' => match(strtolower($item->nama)) {
 
-                'stasiun bogor parkir center' => 'images/stasiun-1.png',
+                'stasiun bogor parkir center' => 'images/stasiun-1.jpg',
                 'plaza jambu dua' => 'images/jambu2-1.jpg',
                 'boxies 123 mall' => 'images/boxies-1.jpg',
                 'cibinong city mall' => 'images/cibinong-1.webp',
                 'bogor trade mall (btm)' => 'images/btm-1.jpg',
-                'aeon mall sentul city' => 'images/aeon-1.png',
-                'botani square mall' => 'images/botani-1.png',
-                'transmart yasmin' => 'images/transmart-1.png',
+                'aeon mall sentul city' => 'images/aeon-1.jpg',
+                'botani square mall' => 'images/botani-1.webp',
+                'transmart yasmin' => 'images/transmart-1.jpg',
                 'lippo plaza keboen raya' => 'images/lippo-1.jpg',
                 'ramayana bogor trade center' => 'images/ramayana-1.webp',
 
@@ -55,6 +56,7 @@ class BerandaController extends Controller
 
         return view('akun', compact('user', 'kendaraan'));
     }
+    
 
     // ─── SAVE KENDARAAN (TIDAK DIUBAH) ────────────────────────────────────────
    public function saveKendaraan(Request $request)
