@@ -1,3 +1,14 @@
+@php
+    // Ambil order_id dari URL (misal: /success?order_id=ORDER-123)
+    $orderId = request()->get('order_id');
+    
+    // Ambil data pembayaran dari database berdasarkan nomor referensi
+    // Sesuai dengan tabel yang kamu miliki di phpMyAdmin
+    $pembayaran = \DB::table('pembayaran')
+        ->where('referensi_pembayaran', $orderId)
+        ->first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -168,7 +179,7 @@
   .mono { font-family: 'DM Mono', monospace; font-size: 13px; }
 
   /* REDIRECT BAR */
- .redirect-bar {
+  .redirect-bar {
     width: 100%;
     max-width: 660px;
     display: flex;
@@ -179,13 +190,13 @@
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     animation: fadeUp 0.5s 0.7s ease both;
-}
+  }
 
-.next-btn {
+  .next-btn {
     width: 100%;
     max-width: 200px;
     height: 48px;
-    background: #19183B; /* warna yang lo mau */
+    background: #19183B;
     color: white;
     border: none;
     border-radius: 12px;
@@ -193,29 +204,12 @@
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
-}
+  }
 
-.next-btn:hover {
+  .next-btn:hover {
     opacity: 0.9;
     transform: translateY(-1px);
-}
-  .spinner {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: conic-gradient(var(--green) 0%, transparent 0%);
-    animation: spinFill 3s linear forwards;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
   }
-  .spinner::after {
-    content: '';
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background: white;
-  }
-
-  .redirect-text { font-size: 13px; color: var(--muted); }
-  .redirect-text strong { color: var(--text); display: block; font-size: 14px; margin-bottom: 2px; }
 
   /* ANIMATIONS */
   @keyframes popIn {
@@ -229,10 +223,6 @@
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes spinFill {
-    from { background: conic-gradient(var(--green) 0%, #e8e8e8 0%); }
-    to { background: conic-gradient(var(--green) 100%, #e8e8e8 100%); }
-  }
 </style>
 </head>
 <body>
@@ -241,7 +231,6 @@
   <svg viewBox="0 0 24 24" fill="none"><polyline points="15 18 9 12 15 6"/></svg>
 </button>
 
-<!-- Success Card -->
 <div class="card success-card">
   <div class="check-ring">
     <svg viewBox="0 0 24 24">
@@ -250,7 +239,6 @@
   </div>
   <span class="success-label">Pembayaran berhasil !</span>
   
-  <!-- Sekarang $pembayaran sudah ada isinya -->
   <span class="amount">
     Rp {{ $pembayaran ? number_format($pembayaran->jumlah, 0, ',', '.') : '0' }}
   </span>
@@ -258,7 +246,6 @@
   <p>Ref Number: {{ $orderId }}</p>
 </div>
 
-<!-- Detail Card -->
 <div class="card detail-card">
   <div class="detail-header">
     <h2>Detail Pembayaran</h2>
@@ -305,5 +292,6 @@
     function goqrcode() {
         window.location.href = "/qrcode";
     }
-</script></body>
+</script>
+</body>
 </html>
