@@ -1,13 +1,11 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BerandaController;
 
-// ─── AKUN ─────────────────────────────────────────────────────────────────────
+// ✅ AKUN (FIX)
 Route::get('/akun', [BerandaController::class, 'profile'])
     ->name('akun')
     ->middleware('auth');
@@ -15,13 +13,18 @@ Route::get('/akun', [BerandaController::class, 'profile'])
 Route::post('/save-kendaraan', [BerandaController::class, 'saveKendaraan'])
     ->name('save.kendaraan');
 
-// ─── HALAMAN UTAMA ────────────────────────────────────────────────────────────
+
+
+// ===============================
+// YANG LAIN BIARIN
+// ===============================
+
 Route::get('/', fn() => view('splash'));
 Route::get('/onboarding', fn() => view('onboarding'));
-Route::get('/login', fn() => view('login'))->name('login');
-Route::get('/register', fn() => view('register'));
+Route::get('/login', fn() => view('login'));
+Route::get('/register', fn() => view('login'));
 
-Route::get('/beranda', [BerandaController::class, 'index']); // ← DIUBAH
+Route::get('/beranda', fn() => view('beranda'));
 Route::get('/map', fn() => view('maps'));
 Route::get('/tiket', fn() => view('tiket'));
 Route::get('/riwayat', fn() => view('riwayat'));
@@ -29,6 +32,7 @@ Route::get('/riwayat', fn() => view('riwayat'));
 Route::get('/succes', fn() => view('succes'));
 Route::get('/qrcode', [QrController::class, 'index']);
 
+// (boleh dihapus, tapi gak wajib)
 Route::get('/profile', [BerandaController::class, 'profile'])->middleware('auth');
 
 Route::get('/akun/edit', function () {
@@ -39,16 +43,17 @@ Route::get('/booking', function () {
     return view('booking');
 });
 
-// ─── AUTH 
-Route::post('/register-proses', [AuthController::class, 'register'])->name('register.submit');
+// Auth
+Route::post('/register-proses', [AuthController::class, 'register'])->name('register.proses');
 Route::post('/login-proses', [AuthController::class, 'login'])->name('login.proses');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// ⚠️ FIX TYPO
 Route::post('/proses-login', [AuthController::class, 'login'])->name('login.submit');
 
-// ─── BOOKING ──────────────────────────────────────────────────────────────────
+// Booking
 Route::post('/proses-booking', [BookingController::class, 'store'])->name('booking.store');
 
-// ─── LOGOUT VIA GET ───────────────────────────────────────────────────────────
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('/login');

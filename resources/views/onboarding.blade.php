@@ -231,7 +231,7 @@ function nextPage() {
 }
 
 function goHome() {
-    window.location.href = "/login";
+    window.location.href = "/beranda";
 }
 </script>
 
