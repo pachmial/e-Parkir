@@ -21,7 +21,8 @@ Route::get('/onboarding', fn() => view('onboarding'));
 Route::get('/login', fn() => view('login'))->name('login');
 Route::get('/register', fn() => view('register'));
 
-Route::get('/beranda', [BerandaController::class, 'index']); // ← DIUBAH
+Route::get('/beranda', [BerandaController::class, 'index'])
+    ->middleware('auth');
 Route::get('/map', fn() => view('maps'));
 Route::get('/tiket', fn() => view('tiket'));
 Route::get('/riwayat', fn() => view('riwayat'));

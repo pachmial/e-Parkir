@@ -1681,18 +1681,20 @@
 
         <div class="formulir-sub-title">Ticket details</div>
 
-        <div class="formulir-inputs">
-            <input class="formulir-input" type="text"
+
+            <input class="formulir-input"
+                type="text"
                 placeholder="Konfirmasi nama anda."
                 id="inputNama"
-                value="{{ $user->name ?? '' }}">
+                value="{{ $user->nama ?? '' }}"
+                readonly>
 
-
-            <input class="formulir-input" type="text"
-            placeholder="Masukan plat nomor."
-            id="inputPlat"
-            oninput="this.value=this.value.toUpperCase()"
-            value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}">
+            <input class="formulir-input"
+                type="text"
+                placeholder="Masukan plat nomor."
+                id="inputPlat"
+                value="{{ strtoupper($kendaraan->plat_nomor ?? '') }}"
+                readonly>
 
             <input class="formulir-input" type="time"
                 id="inputJamAwal"
